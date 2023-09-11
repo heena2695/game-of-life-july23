@@ -12,15 +12,18 @@ pipeline {
             steps {
                 git url : 'https://github.com/heena2695/game-of-life-july23.git',
                 branch : 'master'
-
             } 
         }
-        stage('build') {
+        stage('package') {
             steps {
-                sh 'mvn compile'
-
+                sh 'mvn clean package'
             } 
         }
-        
+        stage('Archieve artifacts') {
+            steps {
+                archiveArtifacts artifacts : '**/*.jar'
+                junit testResults : '**/target/surefire-reports/TEST-*.xml'
+            } 
+        }
     }
 }
