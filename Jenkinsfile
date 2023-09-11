@@ -40,14 +40,14 @@ pipeline {
         success {
             mail from : 'jenkins@jenkins.com',
                  to : 'test@tester.com',
-                 subject : "$(BUILD_ID) PROJECT SUCCESS",
-                 body : "$(GIT_AUTHOR_NAME): Your code is GOOD, refer here $(JOB_DISPLAY_URL)"
+                 subject : "${BUILD_ID} PROJECT SUCCESS",
+                 body : "${GIT_AUTHOR_NAME}: Your code is GOOD, refer here ${JOB_DISPLAY_URL}"
         }
         failure {
             mail from : 'jenkins@jenkins.com',
                  to : 'test@tester.com',
-                 subject : "$(BUILD_ID) PROJECT FAIL",
-                 body : "$(GIT_AUTHOR_NAME): Your code is bad, refer here $(JOB_DISPLAY_URL)"
+                 subject : "${BUILD_ID} PROJECT FAIL",
+                 body : "${GIT_AUTHOR_NAME}: Your code is bad, refer here ${JOB_DISPLAY_URL}"
         }
 
      }
