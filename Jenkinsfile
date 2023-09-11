@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'GOL' }
     options {
-        timeout(time: 10, unit: 'MIN') 
+        timeout(time: 10, unit: 'MINUTES') 
     }
     triggers { pollSCM('5 * * * *') }
     tools {
