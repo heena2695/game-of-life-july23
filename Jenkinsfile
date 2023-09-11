@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Compile and Sonarqube') {
             steps {
-                sh "mvn ${params.GOAL} sonar:sonar'"
+                sh "mvn ${params.GOAL} sonar:sonar"
             } 
         } 
         stage('package') {
