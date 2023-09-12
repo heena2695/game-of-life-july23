@@ -17,15 +17,24 @@ pipeline {
                 branch : 'master'
             } 
         }
-        stage('Compile and Sonarqube') {
+       
+        stage('Build and package') {
             steps {
-                sh "mvn ${params.GOAL} sonar:sonar"
-            } 
-        } 
-        stage('package') {
-            steps {
-                sh "mvn ${params.GOAL}"
-            } 
+                 rtMavenDeployer (
+                    id: "SPC_DEPLOYER",
+                    serverId: "JFROG",
+                    releaseRepo: 'libs-snapshot-local',
+                    snapshotRepo: 'libs-snapshot-local'
+                )
+                rtMavenRun (
+                    tool: 'Maven',
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: "SPC_DEPLOYER"
+                )
+                rtPublishBuildInfo (
+                    serverId: "JFROG"
+ 
         }
         stage('Archieve artifacts') {
             steps {
@@ -38,16 +47,14 @@ pipeline {
     post 
     {
         success {
-            mail from : 'jenkins@jenkins.com',
-                 to : 'test@tester.com',
-                 subject : "${BUILD_ID} PROJECT SUCCESS",
-                 body : "${GIT_AUTHOR_NAME}: Your code is GOOD, refer here ${JOB_DISPLAY_URL}"
+            mail subject : "${BUILD_ID} PROJECT SUCCESS",
+                 body : "${GIT_AUTHOR_NAME}: Your code is GOOD, refer here ${JOB_DISPLAY_URL}",
+                 to : 'test@tester.com'
         }
         failure {
-            mail from : 'jenkins@jenkins.com',
-                 to : 'test@tester.com',
-                 subject : "${BUILD_ID} PROJECT FAIL",
-                 body : "${GIT_AUTHOR_NAME}: Your code is bad, refer here ${JOB_DISPLAY_URL}"
+            mail subject : "${BUILD_ID} PROJECT FAIL",
+                 body : "${GIT_AUTHOR_NAME}: Your code is bad, refer here ${JOB_DISPLAY_URL}",
+                 to : 'test@tester.com'
         }
 
      }
